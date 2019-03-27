@@ -84,7 +84,55 @@ app.get('/find', function(req, res) {
         });
     });
 });
-
+//聚合
+app.get('/total/type',function(req,res){
+    MongoClient.connect(url, { useNewUrlParser: true }, function(err, db) {
+        if (err) throw err;
+        var dbo = db.db("zyroot");
+        dbo.collection("zy").aggregate([
+            {$match: {}}, 
+            {$group:
+                {_id: '$type', total: {$sum: '$num'} }
+            }
+        ])
+        .toArray(function(err, docs) {
+            res.send({docs})
+            db.close();
+          });
+    });
+});
+app.get('/total/paytype',function(req,res){
+    MongoClient.connect(url, { useNewUrlParser: true }, function(err, db) {
+        if (err) throw err;
+        var dbo = db.db("zyroot");
+        dbo.collection("zy").aggregate([
+            {$match: {}}, 
+            {$group:
+                {_id: '$pay_type', total: {$sum: '$num'} }
+            }
+        ])
+        .toArray(function(err, docs) {
+            res.send({docs})
+            db.close();
+          });
+    });
+});
+app.get('/total/time',function(req,res){
+    MongoClient.connect(url, { useNewUrlParser: true }, function(err, db) {
+        if (err) throw err;
+        var dbo = db.db("zyroot");
+        dbo.collection("zy").aggregate([
+            {$match: {}}, 
+            {$group:
+                {_id: '$time', total: {$sum: '$num'} }
+            }
+        ])
+        .toArray(function(err, docs) {
+            res.send({docs})
+            db.close();
+          });
+    });
+});
 var server = app.listen(8022,'127.0.0.1',function () {
  
   var host = server.address().address
